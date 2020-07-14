@@ -26,6 +26,9 @@ module.exports = {
       spacing: {
         "96": "24rem",
       },
+      screens: {
+        xxl: "1400px",
+      },
     },
   },
   variants: {},
