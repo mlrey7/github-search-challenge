@@ -16,7 +16,7 @@
       </svg>
     </button>
 
-    <div v-if="pageCount > 7" class="flex space-x-3">
+    <div v-if="isDynamic" class="flex space-x-3">
       <button
         class="rounded border border-gray-200 w-10 h-10 text-gray-200 text-xs active:border-blue-500 active:text-blue-500 focus:outline-none focus:shadow-outline"
         :class="activeButtonIndex === -3 ? 'selected-page' : 'passive-page'"
@@ -95,9 +95,12 @@
 
     <div class="flex space-x-3" v-else>
       <button
-        class="rounded border border-gray-200 w-10 h-10 text-gray-200 text-xs active:border-blue-500 active:text-blue-500 focus:outline-none focus:shadow-outline"
         v-for="i in pageCount"
         :key="i"
+        class="rounded border border-gray-200 w-10 h-10 text-gray-200 text-xs active:border-blue-500 active:text-blue-500 focus:outline-none focus:shadow-outline"
+        :class="activeButtonIndex === i ? 'selected-page' : 'passive-page'"
+        :id="`pagination-button-(${i})`"
+        @click.prevent="onNavStatic(i)"
       >{{i}}</button>
     </div>
 
@@ -134,54 +137,67 @@ export default {
     },
     isShowLastEllipsis() {
       return this.pageCount - this.currentIndex > 3;
+    },
+    isDynamic() {
+      return this.pageCount > 7;
     }
   },
   data() {
     return {
       currentIndex: 1,
       middleIndex: 4,
-      activeButtonIndex: -3
+      activeButtonIndex: null
     };
   },
+  watch: {
+    currentIndex: function(currentIndex) {
+      this.$emit("page-change", currentIndex);
+
+      if (this.isDynamic) {
+        if (this.isShowFirstEllipsis && this.isShowLastEllipsis) {
+          this.middleIndex = currentIndex;
+          this.activeButtonIndex = 0;
+        } else if (currentIndex <= 4) {
+          this.middleIndex = 4;
+          this.activeButtonIndex = currentIndex - this.middleIndex;
+        } else if (currentIndex >= this.pageCount - 3) {
+          this.middleIndex = this.pageCount - 3;
+          this.activeButtonIndex = currentIndex - this.middleIndex;
+        }
+
+        document
+          .getElementById(`pagination-button-(${this.activeButtonIndex})`)
+          .focus();
+      } else {
+        this.activeButtonIndex = currentIndex;
+      }
+    }
+  },
+  mounted() {
+    if (this.isDynamic) {
+      this.activeButtonIndex = -3;
+    } else {
+      this.activeButtonIndex = 1;
+    }
+  },
   methods: {
+    onNavStatic(index) {
+      this.currentIndex = index;
+      this.activeButtonIndex = index;
+    },
     onNavFixed(index) {
       this.currentIndex = index === -3 ? 1 : this.pageCount;
-      this.updateNav();
     },
     onNav(index) {
       this.currentIndex = this.middleIndex + index;
-      this.updateNav();
     },
     onNavLeft() {
       if (this.currentIndex === 1) return;
       this.currentIndex = this.currentIndex - 1;
-      this.updateNav();
     },
     onNavRight() {
       if (this.currentIndex === this.pageCount) return;
       this.currentIndex = this.currentIndex + 1;
-      this.updateNav();
-    },
-    updateNav() {
-      this.$emit("page-change", this.currentIndex);
-
-      if (this.isShowFirstEllipsis && this.isShowLastEllipsis) {
-        this.middleIndex = this.currentIndex;
-        this.activeButtonIndex = 0;
-        console.log("reg");
-      } else if (this.currentIndex <= 4) {
-        this.middleIndex = 4;
-        this.activeButtonIndex = this.currentIndex - this.middleIndex;
-        console.log("left");
-      } else if (this.currentIndex >= this.pageCount - 3) {
-        this.middleIndex = this.pageCount - 3;
-        this.activeButtonIndex = this.currentIndex - this.middleIndex;
-        console.log("right");
-      }
-      document
-        .getElementById(`pagination-button-(${this.activeButtonIndex})`)
-        .focus();
-      console.log(this.currentIndex, this.middleIndex);
     }
   }
 };
