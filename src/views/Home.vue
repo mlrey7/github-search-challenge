@@ -89,6 +89,7 @@
               :job-type="job.type"
               :job-location="job.location"
               :created-at="job.created_at"
+              :image-url="job.company_logo"
             />
           </li>
         </ol>

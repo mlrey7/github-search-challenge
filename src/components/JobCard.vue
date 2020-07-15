@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white p-5 flex justify-start rounded shadow">
-    <img src="https://dummyimage.com/90x90/000/fff" alt="profile image" class="self-start" />
+    <img v-lazy="imageUrl" alt="profile image" class="self-start object-cover job-thumbnail" />
     <div class="ml-4 flex flex-col justify-start flex-1">
       <h1 class="font-sans font-bold text-indigo-700 text-xs">{{company}}</h1>
       <h2 class="font-sans text-indigo-700 text-base mt-2">{{jobTitle}}</h2>
@@ -97,6 +97,9 @@ export default {
     createdAt: {
       type: String,
       required: true
+    },
+    imageUrl: {
+      type: String
     }
   },
   computed: {
@@ -107,5 +110,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.job-thumbnail {
+  width: 90px;
+  height: 90px;
+}
 </style>
