@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="bg-gray-100 p-3 lg:py-8 lg:px-16 xl:px-32 h-screen">
+  <div id="app" class="bg-gray-100 p-3 lg:py-8 lg:px-16 xl:px-32">
     <h1 class="font-sans-alt font-bold text-xl">
       Github
       <span class="font-light">Jobs</span>

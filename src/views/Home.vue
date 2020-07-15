@@ -80,28 +80,35 @@
         </div>
       </section>
 
-      <ol class="mt-6 px-2 w-full lg:ml-8">
-        <li v-for="x in 4" :key="x" class="mb-6">
-          <JobCard
-            company="Kasisto"
-            job-title="Front-End Software Engineer"
-            job-type="Full Time"
-            job-location="New York"
-            created-at="Mon Jun 15 07:23:47 UTC 2020"
-          />
-        </li>
-      </ol>
+      <section class="w-full">
+        <ol class="mt-6 px-2 lg:px-0 lg:pl-2 lg:ml-8">
+          <li v-for="x in 4" :key="x" class="mb-6">
+            <JobCard
+              company="Kasisto"
+              job-title="Front-End Software Engineer"
+              job-type="Full Time"
+              job-location="New York"
+              created-at="Mon Jun 15 07:23:47 UTC 2020"
+            />
+          </li>
+        </ol>
+
+        <div class="hidden lg:flex lg:justify-end">
+          <PaginationControl :pageCount="100" />
+        </div>
+      </section>
     </div>
   </div>
 </template>
 
 <script>
 import JobCard from "@/components/JobCard.vue";
-
+import PaginationControl from "@/components/PaginationControl.vue";
 export default {
   name: "Home",
   components: {
-    JobCard
+    JobCard,
+    PaginationControl
   }
 };
 </script>

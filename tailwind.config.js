@@ -16,6 +16,7 @@ module.exports = {
       },
       gray: {
         "100": "#F6F7FB",
+        "200": "#B7BCCE",
         "500": "#B9BDCF",
       },
       yellow: {
@@ -31,6 +32,10 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: {
+    textColor: ["responsive", "hover", "focus", "active", "group-hover"],
+    backgroundColor: ["responsive", "hover", "focus", "active"],
+    borderColor: ["responsive", "hover", "focus", "active"],
+  },
   plugins: [],
 };
