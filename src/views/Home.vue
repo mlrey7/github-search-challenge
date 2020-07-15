@@ -82,19 +82,19 @@
 
       <section class="w-full">
         <ol class="mt-6 px-2 lg:px-0 lg:pl-2 lg:ml-8">
-          <li v-for="x in 4" :key="x" class="mb-6">
+          <li v-for="job in currentJobList" :key="job.id" class="mb-6">
             <JobCard
-              company="Kasisto"
-              job-title="Front-End Software Engineer"
-              job-type="Full Time"
-              job-location="New York"
-              created-at="Mon Jun 15 07:23:47 UTC 2020"
+              :company="job.company"
+              :job-title="job.title"
+              :job-type="job.type"
+              :job-location="job.location"
+              :created-at="job.created_at"
             />
           </li>
         </ol>
 
         <div class="hidden lg:flex lg:justify-end">
-          <PaginationControl :pageCount="100" />
+          <PaginationControl :pageCount="pageCount" @page-change="onPageChange" />
         </div>
       </section>
     </div>
@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import JobCard from "@/components/JobCard.vue";
 import PaginationControl from "@/components/PaginationControl.vue";
 export default {
@@ -109,6 +110,34 @@ export default {
   components: {
     JobCard,
     PaginationControl
+  },
+  data() {
+    return {
+      jobList: [],
+      page: 1
+    };
+  },
+  computed: {
+    currentJobList() {
+      return this.jobList.slice((this.page - 1) * 5, (this.page - 1) * 5 + 5);
+    },
+    pageCount() {
+      return Math.round(this.jobList.length / 5);
+    }
+  },
+  mounted() {
+    this.fetchData();
+  },
+  methods: {
+    async fetchData() {
+      const { data } = await axios.get(
+        "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=code"
+      );
+      this.jobList = data;
+    },
+    onPageChange(index) {
+      this.page = index;
+    }
   }
 };
 </script>

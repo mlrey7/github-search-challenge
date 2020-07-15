@@ -171,13 +171,13 @@ export default {
       } else {
         this.activeButtonIndex = currentIndex;
       }
-    }
-  },
-  mounted() {
-    if (this.isDynamic) {
-      this.activeButtonIndex = -3;
-    } else {
-      this.activeButtonIndex = 1;
+    },
+    pageCount: function() {
+      if (this.isDynamic) {
+        this.activeButtonIndex = -3;
+      } else {
+        this.activeButtonIndex = 1;
+      }
     }
   },
   methods: {
