@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:grid lg:grid-cols-6">
+  <div class="flex flex-col lg:flex-row">
     <section>
       <button class="flex w-full items-center" @click.prevent="onBack">
         <svg
@@ -15,12 +15,13 @@
         <span class="ml-3 font-sans-alt font-medium text-sm text-blue-500">Back to search</span>
       </button>
       <h1 class="mt-8 font-sans-alt font-bold text-sm uppercase text-gray-500">HOW TO APPLY</h1>
+
       <vue-simple-markdown
         :source="howToApply"
-        class="mt-4 font-sans-alt font-medium text-sm text-indigo-700 overflow-auto"
+        class="mt-4 font-sans-alt font-medium text-sm text-indigo-700 lg:max-w-xs break-words"
       ></vue-simple-markdown>
     </section>
-    <section class="mt-8 lg:mt-0 lg:col-span-5">
+    <section class="mt-8 lg:mt-0 lg:col-span-5 lg:ml-20">
       <div class="flex flex-col lg:flex-row items-start lg:items-center">
         <h1 class="font-sans font-bold text-2xl text-indigo-700">{{title}}</h1>
         <div
