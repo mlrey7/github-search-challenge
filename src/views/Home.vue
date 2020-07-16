@@ -91,14 +91,17 @@
       <section class="w-full">
         <ol class="mt-6 px-2 lg:px-0 lg:pl-2 lg:ml-8">
           <li v-for="job in currentJobList" :key="job.id" class="mb-6">
-            <JobCard
-              :company="job.company"
-              :job-title="job.title"
-              :job-type="job.type"
-              :job-location="job.location"
-              :created-at="job.created_at"
-              :image-url="job.company_logo"
-            />
+            <button @click.prevent="onJobPosting(job.id)" class="w-full">
+              <JobCard
+                :company="job.company"
+                :job-title="job.title"
+                :job-type="job.type"
+                :job-location="job.location"
+                :created-at="job.created_at"
+                :image-url="job.company_logo"
+                class="w-full"
+              />
+            </button>
           </li>
         </ol>
 
@@ -167,6 +170,10 @@ export default {
       });
 
       this.searchQuery = "";
+    },
+    onJobPosting(id) {
+      console.log("kiminonaewa", id);
+      this.$router.push({ path: `/${id}` });
     }
   }
 };

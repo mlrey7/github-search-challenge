@@ -5,15 +5,15 @@
       alt="profile image"
       class="self-start object-cover job-thumbnail"
     />
-    <div class="ml-4 flex flex-col justify-start flex-1">
+    <div class="ml-4 flex flex-col justify-start flex-1 items-start">
       <h1 class="font-sans font-bold text-indigo-700 text-xs">{{company}}</h1>
       <h2 class="font-sans text-indigo-700 text-base mt-2">{{jobTitle}}</h2>
-      <div class="flex mt-3 justify-between items-center">
+      <div class="flex mt-3 justify-between items-center w-full">
         <div
           class="border border-indigo-700 rounded font-sans font-bold text-indigo-700 text-xs py-1 px-2 box-content"
         >{{jobType}}</div>
         <div class="hidden lg:block">
-          <div class="inline-flex">
+          <div class="inline-flex items-center">
             <svg
               viewBox="0 0 16 15"
               fill="none"
@@ -28,7 +28,7 @@
               class="font-sans font-medium text-gray-500 text-xs ml-2 align-middle"
             >{{jobLocation}}</h3>
           </div>
-          <div class="inline-flex ml-6">
+          <div class="inline-flex ml-6 items-center">
             <svg
               viewBox="0 0 16 16"
               fill="none"
