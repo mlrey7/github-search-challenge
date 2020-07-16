@@ -16,15 +16,19 @@
             fill="#B9BDCF"
           />
         </svg>
+        <form @submit.prevent="onSearch" class="w-full">
+          <input
+            class="w-full px-2 text-indigo-700 leading-tight focus:outline-none border-none bg-white text-xs"
+            id="job"
+            type="text"
+            placeholder="Title, companies, expertise or benefits"
+            v-model="searchQuery"
+          />
+        </form>
 
-        <input
-          class="w-full px-2 text-indigo-700 leading-tight focus:outline-none border-none bg-white text-xs"
-          id="job"
-          type="text"
-          placeholder="Title, companies, expertise or benefits"
-        />
         <button
-          class="bg-blue-500 font-sans font-medium text-base text-white px-6 py-2 rounded"
+          class="bg-blue-500 font-sans font-medium text-base text-white px-6 py-2 rounded focus:outline-none focus:shadow-outline"
+          @click.prevent="onSearch"
         >Search</button>
       </div>
     </div>
@@ -33,7 +37,7 @@
       <section>
         <div class="mt-8">
           <label class="container font-sans-alt font-medium text-sm text-indigo-700">
-            <input type="checkbox" />
+            <input type="checkbox" v-model="fullTime" />
             <span class="ml-3">Full time</span>
           </label>
         </div>
@@ -50,31 +54,35 @@
                 d="M8 0C3.86 0 0.5 3.36 0.5 7.5C0.5 11.64 3.86 15 8 15C12.14 15 15.5 11.64 15.5 7.5C15.5 3.36 12.14 0 8 0ZM7.25 13.4475C4.2875 13.08 2 10.56 2 7.5C2 7.035 2.06 6.5925 2.1575 6.1575L5.75 9.75V10.5C5.75 11.325 6.425 12 7.25 12V13.4475ZM12.425 11.5425C12.23 10.935 11.675 10.5 11 10.5H10.25V8.25C10.25 7.8375 9.9125 7.5 9.5 7.5H5V6H6.5C6.9125 6 7.25 5.6625 7.25 5.25V3.75H8.75C9.575 3.75 10.25 3.075 10.25 2.25V1.9425C12.4475 2.835 14 4.9875 14 7.5C14 9.06 13.4 10.4775 12.425 11.5425Z"
               />
             </svg>
-            <input
-              class="w-full px-2 text-indigo-700 leading-tight focus:outline-none border-none bg-white text-xs"
-              id="location"
-              type="text"
-              placeholder="City, state, zip code or country"
-            />
+
+            <form @submit.prevent="onSearch" class="w-full flex">
+              <input
+                class="w-full px-2 text-indigo-700 leading-tight focus:outline-none border-none bg-white text-xs"
+                id="location"
+                type="text"
+                placeholder="City, state, zip code or country"
+                v-model="locationQuery"
+              />
+            </form>
           </div>
         </div>
         <div class="flex flex-col mt-6 px-2">
           <label class="container font-sans-alt font-medium text-sm text-indigo-700">
-            <input type="checkbox" />
+            <input type="checkbox" value="London" v-model="checkedLocations" />
             <span class="ml-3">London</span>
           </label>
           <label class="container font-sans-alt font-medium text-sm text-indigo-700">
-            <input type="checkbox" />
+            <input type="checkbox" value="Amsterdam" v-model="checkedLocations" />
             <span class="ml-3">Amsterdam</span>
           </label>
 
           <label class="container font-sans-alt font-medium text-sm text-indigo-700">
-            <input type="checkbox" checked="checked" />
+            <input type="checkbox" value="New York" v-model="checkedLocations" />
             <span class="ml-3">New York</span>
           </label>
 
           <label class="container font-sans-alt font-medium text-sm text-indigo-700">
-            <input type="checkbox" />
+            <input type="checkbox" value="Berlin" v-model="checkedLocations" />
             <span class="ml-3">Berlin</span>
           </label>
         </div>
@@ -115,7 +123,11 @@ export default {
   data() {
     return {
       jobList: [],
-      page: 1
+      page: 1,
+      searchQuery: "",
+      locationQuery: "",
+      fullTime: true,
+      checkedLocations: ["New York"]
     };
   },
   computed: {
@@ -123,10 +135,10 @@ export default {
       return this.jobList.slice((this.page - 1) * 5, (this.page - 1) * 5 + 5);
     },
     pageCount() {
-      return Math.round(this.jobList.length / 5);
+      return Math.ceil(this.jobList.length / 5);
     }
   },
-  mounted() {
+  created() {
     this.fetchData();
   },
   methods: {
@@ -138,6 +150,23 @@ export default {
     },
     onPageChange(index) {
       this.page = index;
+    },
+    async onSearch() {
+      if (this.locationQuery !== "") {
+        const { data } = await axios.get(
+          `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=${this.searchQuery}&full_time=${this.fullTime}&location=${this.locationQuery}`
+        );
+        this.jobList = data;
+      }
+
+      this.checkedLocations.forEach(async location => {
+        const { data } = await axios.get(
+          `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=${this.searchQuery}&full_time=${this.fullTime}&location=${location}`
+        );
+        this.jobList.push(...data);
+      });
+
+      this.searchQuery = "";
     }
   }
 };

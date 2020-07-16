@@ -1,6 +1,10 @@
 <template>
   <div class="bg-white p-5 flex justify-start rounded shadow">
-    <img v-lazy="imageUrl" alt="profile image" class="self-start object-cover job-thumbnail" />
+    <progressive-img
+      :src="imageUrl"
+      alt="profile image"
+      class="self-start object-cover job-thumbnail"
+    />
     <div class="ml-4 flex flex-col justify-start flex-1">
       <h1 class="font-sans font-bold text-indigo-700 text-xs">{{company}}</h1>
       <h2 class="font-sans text-indigo-700 text-base mt-2">{{jobTitle}}</h2>
