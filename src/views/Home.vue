@@ -90,18 +90,20 @@
 
       <section class="w-full">
         <ol class="mt-6 px-2 lg:px-0 lg:pl-2 lg:ml-8">
-          <li v-for="job in currentJobList" :key="job.id" class="mb-6">
-            <button @click.prevent="onJobPosting(job.id)" class="w-full">
-              <JobCard
-                :company="job.company"
-                :job-title="job.title"
-                :job-type="job.type"
-                :job-location="job.location"
-                :created-at="job.created_at"
-                :image-url="job.company_logo"
-                class="w-full"
-              />
-            </button>
+          <li v-for="(job, index) in currentJobList" :key="index" class="mb-6">
+            <PuSkeleton>
+              <button @click.prevent="onJobPosting(job.id)" class="w-full">
+                <JobCard
+                  :company="job.company"
+                  :job-title="job.title"
+                  :job-type="job.type"
+                  :job-location="job.location"
+                  :created-at="job.created_at"
+                  :image-url="job.company_logo"
+                  class="w-full"
+                />
+              </button>
+            </PuSkeleton>
           </li>
         </ol>
 
@@ -135,18 +137,19 @@ export default {
   },
   computed: {
     currentJobList() {
-      return this.jobList.slice((this.page - 1) * 5, (this.page - 1) * 5 + 5);
+      if (this.jobList.length === 0) {
+        return 5;
+      } else
+        return this.jobList.slice((this.page - 1) * 5, (this.page - 1) * 5 + 5);
     },
     pageCount() {
       return Math.ceil(this.jobList.length / 5);
     }
   },
-  created() {
+  mounted() {
     if (localStorage.getItem("jobList")) {
       this.jobList = JSON.parse(localStorage.getItem("jobList"));
-      //  console.log(this.jobList);
     } else this.fetchData();
-    //this.fetchData();
   },
   methods: {
     async fetchData() {
@@ -170,13 +173,17 @@ export default {
         this.jobList = [];
       }
 
-      this.checkedLocations.forEach(async location => {
-        const { data } = await axios.get(
-          `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=${this.searchQuery}&full_time=${this.fullTime}&location=${location}`
-        );
-        this.jobList.push(...data);
+      const pr = this.checkedLocations.map(location => {
+        return axios
+          .get(
+            `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=${this.searchQuery}&full_time=${this.fullTime}&location=${location}`
+          )
+          .then(data => {
+            this.jobList.push(...data.data);
+          });
       });
 
+      await Promise.all(pr);
       localStorage.setItem("jobList", JSON.stringify(this.jobList));
       this.searchQuery = "";
     },
