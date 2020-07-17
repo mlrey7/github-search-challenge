@@ -142,7 +142,11 @@ export default {
     }
   },
   created() {
-    this.fetchData();
+    if (localStorage.getItem("jobList")) {
+      this.jobList = JSON.parse(localStorage.getItem("jobList"));
+      //  console.log(this.jobList);
+    } else this.fetchData();
+    //this.fetchData();
   },
   methods: {
     async fetchData() {
@@ -150,16 +154,20 @@ export default {
         "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=code"
       );
       this.jobList = data;
+      localStorage.setItem("jobList", JSON.stringify(this.jobList));
     },
     onPageChange(index) {
       this.page = index;
     },
     async onSearch() {
+      console.log(this.searchQuery);
       if (this.locationQuery !== "") {
         const { data } = await axios.get(
           `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=${this.searchQuery}&full_time=${this.fullTime}&location=${this.locationQuery}`
         );
         this.jobList = data;
+      } else {
+        this.jobList = [];
       }
 
       this.checkedLocations.forEach(async location => {
@@ -169,6 +177,7 @@ export default {
         this.jobList.push(...data);
       });
 
+      localStorage.setItem("jobList", JSON.stringify(this.jobList));
       this.searchQuery = "";
     },
     onJobPosting(id) {
