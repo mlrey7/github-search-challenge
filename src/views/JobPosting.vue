@@ -16,11 +16,11 @@
       </button>
       <h1 class="mt-8 font-sans-alt font-bold text-sm uppercase text-gray-500">HOW TO APPLY</h1>
 
-      <vue-simple-markdown
+      <vue-markdown
         :source="howToApply"
         class="mt-4 font-sans-alt font-medium text-sm text-indigo-700 lg:max-w-xs break-words"
         v-if="howToApply"
-      ></vue-simple-markdown>
+      ></vue-markdown>
       <PuSkeleton width="100%" height="200px" v-else />
     </section>
     <section class="mt-8 lg:mt-0 lg:col-span-5 lg:ml-20">
@@ -55,7 +55,7 @@
         <img
           :src="imageUrl"
           alt="profile image"
-          class="self-start object-cover job-thumbnail"
+          class="self-start object-cover job-posting-img"
           v-if="imageUrl"
         />
         <PuSkeleton width="45px" height="45px" v-else />
@@ -85,11 +85,12 @@
       </div>
 
       <div class="mt-8">
-        <vue-simple-markdown
-          :source="description"
+        <vue-markdown
           class="mt-4 font-sans font-normal text-base text-indigo-700 leading-normal"
           v-if="description"
-        ></vue-simple-markdown>
+          :source="description"
+          :postrender="prettify"
+        ></vue-markdown>
         <PuSkeleton width="100%" height="300px" v-else />
       </div>
     </section>
@@ -99,9 +100,14 @@
 <script>
 import axios from "axios";
 import { format } from "timeago.js";
+import VueMarkdown from "vue-markdown";
+const replaceAll = require("string.prototype.replaceall");
 
 export default {
   name: "JobPosting",
+  components: {
+    VueMarkdown
+  },
   props: {
     id: {
       type: String,
@@ -134,9 +140,6 @@ export default {
       const { data } = await axios.get(
         `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions/${this.id}.json?markdown=true`
       );
-      // await Promise(resolve => {
-      //   setTimeout(resolve, 10000);
-      // });
 
       this.createdAt = data.created_at;
       this.title = data.title;
@@ -149,13 +152,19 @@ export default {
     },
     onBack() {
       this.$router.push("/");
+    },
+    prettify(val) {
+      let xd = replaceAll(val, "</p>", "</p><br>");
+      xd = replaceAll(xd, "</ul>", "</ul><br>");
+      xd = replaceAll(xd, "<ul>", "<ul class='pl-10 list-disc list-inside'>");
+      return xd;
     }
   }
 };
 </script>
 
 <style scoped>
-.job-thumbnail {
+.job-posting-img {
   width: 45px;
   height: 45px;
 }
