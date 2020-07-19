@@ -1,5 +1,10 @@
 module.exports = {
-  purge: [],
+  purge: {
+    content: ["./src/**/*.html", "./src/**/*.vue", "./src/**/*.jsx"],
+    options: {
+      whitelist: ["p", "ul", "li"],
+    },
+  },
   theme: {
     fontFamily: {
       sans: ["Roboto", "sans-serif"],

@@ -16,11 +16,11 @@
       </button>
       <h1 class="mt-8 font-sans-alt font-bold text-sm uppercase text-gray-500">HOW TO APPLY</h1>
 
-      <vue-markdown
-        :source="howToApply"
+      <div
+        v-html="parsedHowToApply"
         class="mt-4 font-sans-alt font-medium text-sm text-indigo-700 break-words"
         v-if="howToApply"
-      ></vue-markdown>
+      ></div>
       <PuSkeleton height="200px" v-else />
     </section>
     <section class="mt-8 lg:mt-0 lg:col-span-6 lg:ml-20">
@@ -85,12 +85,11 @@
       </div>
 
       <div class="mt-8">
-        <vue-markdown
+        <div
+          v-html="parsedDescription"
           class="font-sans font-normal text-base text-indigo-700 leading-normal"
           v-if="description"
-          :source="description"
-          :postrender="prettify"
-        ></vue-markdown>
+        ></div>
         <PuSkeleton height="800px" v-else />
       </div>
     </section>
@@ -100,14 +99,12 @@
 <script>
 import axios from "axios";
 import { format } from "timeago.js";
-import VueMarkdown from "vue-markdown";
+import DOMPurify from "dompurify";
 const replaceAll = require("string.prototype.replaceall");
+const marked = require("marked");
 
 export default {
   name: "JobPosting",
-  components: {
-    VueMarkdown
-  },
   props: {
     id: {
       type: String,
@@ -130,6 +127,16 @@ export default {
     timeAgo() {
       if (this.createdAt) return format(this.createdAt);
       else return null;
+    },
+    parsedDescription() {
+      return this.prettify(
+        marked(this.description, { sanitizer: DOMPurify.sanitize })
+      );
+    },
+    parsedHowToApply() {
+      return this.prettify(
+        marked(this.howToApply, { sanitizer: DOMPurify.sanitize })
+      );
     }
   },
   created() {
@@ -154,8 +161,7 @@ export default {
       this.$router.push("/");
     },
     prettify(val) {
-      let xd = replaceAll(val, "</p>", "</p><br>");
-      xd = replaceAll(xd, "</ul>", "</ul><br>");
+      let xd = replaceAll(val, "<p>", "<p class='my-4'>");
       xd = replaceAll(xd, "<ul>", "<ul class='pl-10 list-disc list-inside'>");
       return xd;
     }
