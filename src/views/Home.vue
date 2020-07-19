@@ -42,7 +42,10 @@
           </label>
         </div>
         <div class="mt-8">
-          <h1 class="uppercase font-sans-alt font-bold text-sm text-gray-500">Location</h1>
+          <label
+            for="location"
+            class="uppercase font-sans-alt font-bold text-sm text-gray-500"
+          >Location</label>
           <div class="flex shadow p-3 align-center bg-white rounded mt-3 max-w-screen-lg lg:w-96">
             <svg
               viewBox="0 0 16 15"

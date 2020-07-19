@@ -3,6 +3,7 @@
     <button
       class="rounded border border-gray-200 w-10 h-10 text-gray-200 text-xs active:border-blue-500 active:text-blue-500 focus:outline-none focus:shadow-outline flex justify-center align-middle"
       @click.prevent="onNavLeft"
+      aria-label="Previous Page"
     >
       <svg
         viewBox="0 0 8 12"
@@ -107,6 +108,7 @@
     <button
       class="rounded border border-gray-200 w-10 h-10 text-gray-200 text-xs active:border-blue-500 active:text-blue-500 focus:outline-none focus:shadow-outline flex justify-center align-middle"
       @click.prevent="onNavRight"
+      aria-label="Next Page"
     >
       <svg
         viewBox="0 0 8 12"
