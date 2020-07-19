@@ -4,6 +4,8 @@
       :src="imageUrl"
       alt="profile image"
       class="self-start object-cover job-thumbnail"
+      placeholder="@/assets/placeholder.png"
+      fallback="@/assets/not_found.png"
       v-if="imageUrl"
     />
     <PuSkeleton width="90px" height="90px" v-else />

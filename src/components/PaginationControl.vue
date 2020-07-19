@@ -129,7 +129,6 @@ export default {
   name: "PaginationControl",
   props: {
     pageCount: {
-      type: Number,
       required: true
     }
   },

@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row">
+    <main class="flex flex-col lg:flex-row">
       <section>
         <div class="mt-8">
           <label class="container font-sans-alt font-medium text-sm text-indigo-700">
@@ -95,7 +95,10 @@
         <ol class="mt-6 px-2 lg:px-0 lg:pl-2 lg:ml-8">
           <li v-for="(job, index) in currentJobList" :key="index" class="mb-6">
             <PuSkeleton>
-              <button @click.prevent="onJobPosting(job.id)" class="w-full">
+              <button
+                @click.prevent="onJobPosting(job.id)"
+                class="w-full focus:outline-none focus:shadow-outline"
+              >
                 <JobCard
                   :company="job.company"
                   :job-title="job.title"
@@ -114,7 +117,7 @@
           <PaginationControl :pageCount="pageCount" @page-change="onPageChange" />
         </div>
       </section>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -130,7 +133,7 @@ export default {
   },
   data() {
     return {
-      jobList: [],
+      jobList: null,
       page: 1,
       searchQuery: "",
       locationQuery: "",
@@ -140,19 +143,26 @@ export default {
   },
   computed: {
     currentJobList() {
-      if (this.jobList.length === 0) {
+      if (this.jobList === null) {
         return 5;
-      } else
+      } else {
         return this.jobList.slice((this.page - 1) * 5, (this.page - 1) * 5 + 5);
+      }
     },
     pageCount() {
-      return Math.ceil(this.jobList.length / 5);
+      if (this.jobList) {
+        return Math.ceil(this.jobList.length / 5);
+      } else {
+        return null;
+      }
     }
   },
   mounted() {
     if (localStorage.getItem("jobList")) {
       this.jobList = JSON.parse(localStorage.getItem("jobList"));
-    } else this.fetchData();
+    } else {
+      this.fetchData();
+    }
   },
   methods: {
     async fetchData() {
@@ -166,7 +176,6 @@ export default {
       this.page = index;
     },
     async onSearch() {
-      console.log(this.searchQuery);
       if (this.locationQuery !== "") {
         const { data } = await axios.get(
           `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=1&search=${this.searchQuery}&full_time=${this.fullTime}&location=${this.locationQuery}`
@@ -191,8 +200,9 @@ export default {
       this.searchQuery = "";
     },
     onJobPosting(id) {
-      console.log("kiminonaewa", id);
-      this.$router.push({ path: `/${id}` });
+      if (id) {
+        this.$router.push({ path: `/${id}` });
+      }
     }
   }
 };

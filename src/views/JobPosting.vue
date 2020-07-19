@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col lg:flex-row">
-    <section>
+  <main class="flex flex-col lg:grid lg:grid-cols-8">
+    <section class="lg:col-span-2">
       <button class="flex w-full items-center" @click.prevent="onBack">
         <svg
           viewBox="0 0 24 24"
@@ -18,21 +18,21 @@
 
       <vue-markdown
         :source="howToApply"
-        class="mt-4 font-sans-alt font-medium text-sm text-indigo-700 lg:max-w-xs break-words"
+        class="mt-4 font-sans-alt font-medium text-sm text-indigo-700 break-words"
         v-if="howToApply"
       ></vue-markdown>
-      <PuSkeleton width="100%" height="200px" v-else />
+      <PuSkeleton height="200px" v-else />
     </section>
-    <section class="mt-8 lg:mt-0 lg:col-span-5 lg:ml-20">
+    <section class="mt-8 lg:mt-0 lg:col-span-6 lg:ml-20">
       <div class="flex flex-col lg:flex-row items-start lg:items-center">
         <h1 class="font-sans font-bold text-2xl text-indigo-700">
-          <PuSkeleton width="300px">{{title}}</PuSkeleton>
+          <PuSkeleton width="100px">{{title}}</PuSkeleton>
         </h1>
         <div
           class="border border-indigo-700 rounded font-sans font-bold text-indigo-700 text-xs py-1 px-2 inline-flex mt-1 lg:mt-0 lg:ml-5"
           v-if="jobType"
         >{{jobType}}</div>
-        <PuSkeleton width="64px" height="28px" v-else />
+        <PuSkeleton width="64px" height="28px" class="lg:mt-0 lg:ml-5" v-else />
       </div>
 
       <div class="flex mt-2 lg:mt-1">
@@ -86,15 +86,15 @@
 
       <div class="mt-8">
         <vue-markdown
-          class="mt-4 font-sans font-normal text-base text-indigo-700 leading-normal"
+          class="font-sans font-normal text-base text-indigo-700 leading-normal"
           v-if="description"
           :source="description"
           :postrender="prettify"
         ></vue-markdown>
-        <PuSkeleton width="100%" height="300px" v-else />
+        <PuSkeleton height="800px" v-else />
       </div>
     </section>
-  </div>
+  </main>
 </template>
 
 <script>
