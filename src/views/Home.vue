@@ -113,7 +113,7 @@
           </li>
         </ol>
 
-        <div class="hidden lg:flex lg:justify-end">
+        <div class="flex justify-end">
           <PaginationControl :pageCount="pageCount" @page-change="onPageChange" />
         </div>
       </section>
